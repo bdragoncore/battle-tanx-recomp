@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BattleTanxRecompiled
+Type=Application
+Terminal=false
+Icon=BattleTanxRecompiled
+Exec=BattleTanxRecompiled
+GenericName=BattleTanxRecompiled
+Categories=Game;

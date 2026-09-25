@@ -1,0 +1,1636 @@
+# Config file for BattleTanx NTSC 1.0 Recompilation.
+
+[input]
+entrypoint = 0x80071000
+# Paths are relative to the location of this config file.
+output_func_path = "RecompiledFuncs"
+rom_file_path = "BattleTanx (USA).z64"
+symbols_file_path = "BattleTanxSyms/battletanx.us.rev0.syms.toml"
+
+# What follows, up to the "Fixes for running on the stock runtime" block, is generated from the ROM
+# and the symbol table by tools/battletanx/recomp_config/gen_full_cfg.py. It lets stock N64Recomp
+# handle this game; regenerate it rather than editing it by hand.
+#
+# stubs: two cache-invalidate loops. The host caches are coherent, so there is nothing to do.
+# ignored + renamed: osSp*/osSi* come from librecomp, and callers use its _recomp entry points.
+# ignored (last five): entries in the symbol table that sit inside other functions and have no callers.
+[patches]
+stubs = ["func_801226A0", "func_80122720"]
+ignored = ["osSpGetStatus", "osSpSetStatus", "osSiGetStatus", "osSiReadIo", "osSiWriteIo", "osSiRawStartDma", "func_80080E50", "func_80081654", "func_8008A718", "func_800D6238", "func_800F12C4"]
+renamed = ["osSpGetStatus", "osSpSetStatus", "osSiGetStatus", "osSiReadIo", "osSiWriteIo", "osSiRawStartDma"]
+
+# Instruction patches. A value of 0 is a nop. They cover cop0 writes and eret (nothing is emulated),
+# data words inside a function's symbol range that would write to $zero, the branches that leave
+# their function, and every div/divu/ddiv/ddivu (the guarded version is a hook, below).
+
+[[patches.instruction]]
+func = "func_80077028"
+vram = 0x8007709C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80077028"
+vram = 0x800770A0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80077028"
+vram = 0x800770D8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8008228C"
+vram = 0x80082490
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8008228C"
+vram = 0x800824C0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800824E4"
+vram = 0x80082708
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800827AC"
+vram = 0x800829E8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80082AA8"
+vram = 0x80082CB0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80082D60"
+vram = 0x80082EFC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80082D60"
+vram = 0x8008302C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80085978"
+vram = 0x80085AA8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80088670"
+vram = 0x80088B7C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8008F6F4"
+vram = 0x8008F918
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8008FD6C"
+vram = 0x800901C0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80090F10"
+vram = 0x80090F28
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800913AC"
+vram = 0x800914C4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800916B8"
+vram = 0x8009176C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800916B8"
+vram = 0x80091790
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8009201C"
+vram = 0x80092178
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80092734"
+vram = 0x800928BC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800942A8"
+vram = 0x8009441C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800942A8"
+vram = 0x80094494
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800942AC"
+vram = 0x8009441C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800942AC"
+vram = 0x80094494
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800949D8"
+vram = 0x80094BCC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80095CDC"
+vram = 0x80095E48
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800A0134"
+vram = 0x800A0184
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800A16C0"
+vram = 0x800A2764
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800A5348"
+vram = 0x800A53A4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800AA518"
+vram = 0x800AA77C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800AA518"
+vram = 0x800AA910
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800AA518"
+vram = 0x800AAA94
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800AA518"
+vram = 0x800AABC8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800C8210"
+vram = 0x800C8274
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800C8218"
+vram = 0x800C8274
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDCCC"
+vram = 0x800DDCEC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDCCC"
+vram = 0x800DDD64
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDDA8"
+vram = 0x800DDDF8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDE88"
+vram = 0x800DDEE4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDE88"
+vram = 0x800DDF84
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DDE88"
+vram = 0x800DE004
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE0C0"
+vram = 0x800DE124
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE1B4"
+vram = 0x800DE1E0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE1B4"
+vram = 0x800DE228
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE1B4"
+vram = 0x800DE29C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE3EC"
+vram = 0x800DE458
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE3EC"
+vram = 0x800DE508
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE3EC"
+vram = 0x800DE550
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE3EC"
+vram = 0x800DE5F0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE664"
+vram = 0x800DE6DC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE664"
+vram = 0x800DE83C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE664"
+vram = 0x800DEA0C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DE664"
+vram = 0x800DEA54
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DF7D0"
+vram = 0x800DF854
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DF7D0"
+vram = 0x800DF988
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DF7D0"
+vram = 0x800DF9D0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800E031C"
+vram = 0x800E039C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800E031C"
+vram = 0x800E0474
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800E031C"
+vram = 0x800E04BC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F2EFC"
+vram = 0x800F2F58
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F2EFC"
+vram = 0x800F2FB4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F3234"
+vram = 0x800F325C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F3234"
+vram = 0x800F32A4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F3234"
+vram = 0x800F32EC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F45C8"
+vram = 0x800F45E0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F45C8"
+vram = 0x800F45FC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F4794"
+vram = 0x800F48D0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F4794"
+vram = 0x800F48F4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5178"
+vram = 0x800F5214
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53B8"
+vram = 0x800F5418
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53B8"
+vram = 0x800F5454
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53B8"
+vram = 0x800F5480
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53C8"
+vram = 0x800F5418
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53C8"
+vram = 0x800F5454
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F53C8"
+vram = 0x800F5480
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5610"
+vram = 0x800F5670
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5610"
+vram = 0x800F56AC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5610"
+vram = 0x800F56D8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5620"
+vram = 0x800F5670
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5620"
+vram = 0x800F56AC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5620"
+vram = 0x800F56D8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800F5B6C"
+vram = 0x800F6144
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8010CB60"
+vram = 0x8010CBF0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8010CC44"
+vram = 0x8010CCF8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8010CC44"
+vram = 0x8010CD1C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80110490"
+vram = 0x80110570
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80110490"
+vram = 0x801105BC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011049C"
+vram = 0x80110570
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011049C"
+vram = 0x801105BC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80111E14"
+vram = 0x80111EEC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80111E14"
+vram = 0x80111F8C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80112D7C"
+vram = 0x80112DD0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011C210"
+vram = 0x8011C274
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011C3AC"
+vram = 0x8011C49C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011C3AC"
+vram = 0x8011C7A4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011C3AC"
+vram = 0x8011C80C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011F810"
+vram = 0x8011F878
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8011FEBC"
+vram = 0x801201F4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_801219A0"
+vram = 0x801219A0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80123410"
+vram = 0x80123820
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80123410"
+vram = 0x8012386C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80123410"
+vram = 0x801238B8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80123980"
+vram = 0x80123B54
+value = 0x00000000
+
+[[patches.instruction]]
+func = "ldiv_recomp"
+vram = 0x80123FD0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124428
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124490
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124500
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x8012459C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124604
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124678
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x801246E0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x801247FC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124350"
+vram = 0x80124864
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124A38
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124ACC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124B2C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124B90
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124BF0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124D38
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124DA0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124940"
+vram = 0x80124EBC
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x80124F50
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x80124FB8
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x80125028
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x801250C4
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x8012512C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x801251A0
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x80125208
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x80125324
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80124EC0"
+vram = 0x8012538C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_8007F204"
+vram = 0x8007F29C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800DF578"
+vram = 0x800DF57C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_800E4814"
+vram = 0x800E481C
+value = 0x00000000
+
+# Hooks. MIPS leaves LO/HI undefined on a divide by zero, while x86 raises SIGFPE, so each division
+# gets the divisor check the hardware does not need. The hooks that end in a return replace a
+# branch to an address outside its function; they repeat the delay slot so the effect is the same.
+
+[[patches.hook]]
+func = "func_8008228C"
+before_vram = 0x80082490
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r3)); hi = S32(U32(ctx->r4) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8008228C"
+before_vram = 0x800824C0
+text = """
+    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r4)); hi = S32(U32(ctx->r3) % U32(ctx->r4)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800824E4"
+before_vram = 0x80082708
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800827AC"
+before_vram = 0x800829E8
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80082AA8"
+before_vram = 0x80082CB0
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80082D60"
+before_vram = 0x80082EFC
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80082D60"
+before_vram = 0x8008302C
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80085978"
+before_vram = 0x80085AA8
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80088670"
+before_vram = 0x80088B7C
+text = """
+    if (U32(ctx->r21) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r21)); hi = S32(U32(ctx->r2) % U32(ctx->r21)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8008F6F4"
+before_vram = 0x8008F918
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8008FD6C"
+before_vram = 0x800901C0
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r16) / U32(ctx->r2)); hi = S32(U32(ctx->r16) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80090F10"
+before_vram = 0x80090F28
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800913AC"
+before_vram = 0x800914C4
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800916B8"
+before_vram = 0x80091790
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8009201C"
+before_vram = 0x80092178
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80092734"
+before_vram = 0x800928BC
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800942A8"
+before_vram = 0x8009441C
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800942A8"
+before_vram = 0x80094494
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800942AC"
+before_vram = 0x8009441C
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800942AC"
+before_vram = 0x80094494
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800949D8"
+before_vram = 0x80094BCC
+text = """
+    if (S32(ctx->r25) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r25))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r25))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80095CDC"
+before_vram = 0x80095E48
+text = """
+    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r8))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800A0134"
+before_vram = 0x800A0184
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800A16C0"
+before_vram = 0x800A2764
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800A5348"
+before_vram = 0x800A53A4
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800AA518"
+before_vram = 0x800AA77C
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800AA518"
+before_vram = 0x800AA910
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800AA518"
+before_vram = 0x800AAA94
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800AA518"
+before_vram = 0x800AABC8
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800C8210"
+before_vram = 0x800C8274
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800C8218"
+before_vram = 0x800C8274
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDCCC"
+before_vram = 0x800DDCEC
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDCCC"
+before_vram = 0x800DDD64
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDDA8"
+before_vram = 0x800DDDF8
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDE88"
+before_vram = 0x800DDEE4
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDE88"
+before_vram = 0x800DDF84
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DDE88"
+before_vram = 0x800DE004
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE0C0"
+before_vram = 0x800DE124
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE1B4"
+before_vram = 0x800DE1E0
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE1B4"
+before_vram = 0x800DE228
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE1B4"
+before_vram = 0x800DE29C
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE3EC"
+before_vram = 0x800DE458
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE3EC"
+before_vram = 0x800DE508
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE3EC"
+before_vram = 0x800DE550
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE3EC"
+before_vram = 0x800DE5F0
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE664"
+before_vram = 0x800DE6DC
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE664"
+before_vram = 0x800DE83C
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE664"
+before_vram = 0x800DEA0C
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DE664"
+before_vram = 0x800DEA54
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DF7D0"
+before_vram = 0x800DF854
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DF7D0"
+before_vram = 0x800DF988
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800DF7D0"
+before_vram = 0x800DF9D0
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800E031C"
+before_vram = 0x800E039C
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800E031C"
+before_vram = 0x800E0474
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800E031C"
+before_vram = 0x800E04BC
+text = """
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F2EFC"
+before_vram = 0x800F2F58
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r7)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r7)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F2EFC"
+before_vram = 0x800F2FB4
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r7)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r7)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F3234"
+before_vram = 0x800F325C
+text = """
+    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r7)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r7)) % S64(S32(ctx->r8))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F3234"
+before_vram = 0x800F32A4
+text = """
+    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r8))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F3234"
+before_vram = 0x800F32EC
+text = """
+    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r8))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F45C8"
+before_vram = 0x800F45E0
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F45C8"
+before_vram = 0x800F45FC
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F4794"
+before_vram = 0x800F48D0
+text = """
+    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F4794"
+before_vram = 0x800F48F4
+text = """
+    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5178"
+before_vram = 0x800F5214
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r7)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r7)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53B8"
+before_vram = 0x800F5418
+text = """
+    if (U32(ctx->r16) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r16)); hi = S32(U32(ctx->r4) % U32(ctx->r16)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53B8"
+before_vram = 0x800F5454
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53B8"
+before_vram = 0x800F5480
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r16) / U32(ctx->r2)); hi = S32(U32(ctx->r16) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53C8"
+before_vram = 0x800F5418
+text = """
+    if (U32(ctx->r16) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r16)); hi = S32(U32(ctx->r4) % U32(ctx->r16)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53C8"
+before_vram = 0x800F5454
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F53C8"
+before_vram = 0x800F5480
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r16) / U32(ctx->r2)); hi = S32(U32(ctx->r16) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5610"
+before_vram = 0x800F5670
+text = """
+    if (U32(ctx->r16) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r16)); hi = S32(U32(ctx->r4) % U32(ctx->r16)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5610"
+before_vram = 0x800F56AC
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5610"
+before_vram = 0x800F56D8
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r16) / U32(ctx->r2)); hi = S32(U32(ctx->r16) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5620"
+before_vram = 0x800F5670
+text = """
+    if (U32(ctx->r16) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r16)); hi = S32(U32(ctx->r4) % U32(ctx->r16)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5620"
+before_vram = 0x800F56AC
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5620"
+before_vram = 0x800F56D8
+text = """
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r16) / U32(ctx->r2)); hi = S32(U32(ctx->r16) % U32(ctx->r2)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_800F5B6C"
+before_vram = 0x800F6144
+text = """
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8010CB60"
+before_vram = 0x8010CBF0
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8010CC44"
+before_vram = 0x8010CCF8
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8010CC44"
+before_vram = 0x8010CD1C
+text = """
+    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80110490"
+before_vram = 0x80110570
+text = """
+    if (U32(ctx->r1) != 0) { lo = S32(U32(ctx->r5) / U32(ctx->r1)); hi = S32(U32(ctx->r5) % U32(ctx->r1)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80110490"
+before_vram = 0x801105BC
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011049C"
+before_vram = 0x80110570
+text = """
+    if (U32(ctx->r1) != 0) { lo = S32(U32(ctx->r5) / U32(ctx->r1)); hi = S32(U32(ctx->r5) % U32(ctx->r1)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011049C"
+before_vram = 0x801105BC
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80112D7C"
+before_vram = 0x80112DD0
+text = """
+    if (S32(ctx->r13) != 0) { lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r13))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r13))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011C210"
+before_vram = 0x8011C274
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r9)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r9)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011C3AC"
+before_vram = 0x8011C49C
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r24)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r24)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011C3AC"
+before_vram = 0x8011C7A4
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r8)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r8)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011C3AC"
+before_vram = 0x8011C80C
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r8)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r8)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011F810"
+before_vram = 0x8011F878
+text = """
+    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r24)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r24)) % S64(S32(ctx->r5))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8011FEBC"
+before_vram = 0x801201F4
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80123410"
+before_vram = 0x80123820
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80123410"
+before_vram = 0x8012386C
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80123410"
+before_vram = 0x801238B8
+text = """
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80123980"
+before_vram = 0x80123B54
+text = """
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r24)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r24)) % S64(S32(ctx->r1))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "ldiv_recomp"
+before_vram = 0x80123FD0
+text = """
+    if (S32(ctx->r6) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r6))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r6))); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124428
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r6)); hi = S32(U32(ctx->r4) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124490
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124500
+text = """
+    if (U32(ctx->r8) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r8)); hi = S32(U32(ctx->r2) % U32(ctx->r8)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x8012459C
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r7) / U32(ctx->r6)); hi = S32(U32(ctx->r7) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124604
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124678
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r6)); hi = S32(U32(ctx->r4) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x801246E0
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x801247FC
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r7) / U32(ctx->r6)); hi = S32(U32(ctx->r7) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124350"
+before_vram = 0x80124864
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124A38
+text = """
+    if (U32(ctx->r9) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r9)); hi = S32(U32(ctx->r2) % U32(ctx->r9)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124ACC
+text = """
+    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r5)); hi = S32(U32(ctx->r4) % U32(ctx->r5)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124B2C
+text = """
+    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r5)); hi = S32(U32(ctx->r3) % U32(ctx->r5)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124B90
+text = """
+    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r10) / U32(ctx->r5)); hi = S32(U32(ctx->r10) % U32(ctx->r5)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124BF0
+text = """
+    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r5)); hi = S32(U32(ctx->r3) % U32(ctx->r5)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124D38
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r6)); hi = S32(U32(ctx->r4) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124940"
+before_vram = 0x80124DA0
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x80124F50
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r6)); hi = S32(U32(ctx->r4) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x80124FB8
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x80125028
+text = """
+    if (U32(ctx->r8) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r8)); hi = S32(U32(ctx->r2) % U32(ctx->r8)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x801250C4
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r7) / U32(ctx->r6)); hi = S32(U32(ctx->r7) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x8012512C
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x801251A0
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r6)); hi = S32(U32(ctx->r4) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x80125208
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x80125324
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r7) / U32(ctx->r6)); hi = S32(U32(ctx->r7) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_80124EC0"
+before_vram = 0x8012538C
+text = """
+    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r6)); hi = S32(U32(ctx->r3) % U32(ctx->r6)); } else { lo = 0; hi = 0; }
+"""
+
+[[patches.hook]]
+func = "func_8007F204"
+before_vram = 0x8007F29C
+text = """
+    if (ctx->r8 != ctx->r0) {  return; }
+"""
+
+[[patches.hook]]
+func = "func_800DF578"
+before_vram = 0x800DF57C
+text = """
+    if (ctx->r2 != ctx->r0) { ctx->r5 = ADD32(ctx->r5, 0X4); return; }
+"""
+
+[[patches.hook]]
+func = "func_800E4814"
+before_vram = 0x800E481C
+text = """
+    if (ctx->r0 == ctx->r17) { ctx->r29 = ADD32(ctx->r29, -0X70); func_800E8C64(rdram, ctx); return; }
+"""
+
+# Fixes for running on the stock runtime. A hook's text is inserted before the instruction at
+# before_vram, after any label for that address, so a hook on a loop head runs on every pass.
+# yield_self_1ms_recomp is declared in include/btx_recomp_hooks.h. The "btx-patch:" comments mark
+# the generated result; the build checks for them (cmake/check_stock_funcs.cmake).
+#
+# Stock only delivers VI/SP messages to a game queue when a game thread blocks or yields, and the
+# id-3 thread (the VI manager) is the one that clears the gates below. Loops that never yield
+# keep it from running.
+
+# func_8007E248, DEFRAG's task-slot dispatch, waits on the +0xC0 gate. The original loads it into
+# $t0 once and spins on the register, which only ends if the gate is already clear on entry.
+# Re-read it on each pass, and yield when the loop is about to go round again.
+[[patches.hook]]
+func = "func_8007E248"
+before_vram = 0x8007E258
+text = """
+    // btx-patch: re-read the +0xC0 gate on each pass and yield if it is still set.
+    ctx->r8 = MEM_H(ctx->r5, 0XC0);
+    if (ctx->r8 != ctx->r7) { yield_self_1ms_recomp(rdram, ctx); }
+"""
+
+# The same function, when no task slot is free: yield so the VI manager can release one.
+[[patches.hook]]
+func = "func_8007E248"
+before_vram = 0x8007E2B8
+text = """
+    // btx-patch: yield when no task slot is free.
+    if (ctx->r2 == ctx->r7) { yield_self_1ms_recomp(rdram, ctx); }
+"""
+
+# func_8007A5A4, the AUDIO tick builder, waits for the sound slot at [0x80125764] to clear. Same
+# stale-register spin as above, and id-3 clears the slot only if this thread yields.
+[[patches.hook]]
+func = "func_8007A5A4"
+before_vram = 0x8007A70C
+text = """
+    // btx-patch: re-read the sound slot ([0x80125764]) on each pass and yield.
+    ctx->r2 = MEM_W(S32(0X8012 << 16), 0X5764);
+    yield_self_1ms_recomp(rdram, ctx);
+"""
+
+# func_8007D850 (gfxBeginDisplayList) waits at L_8007D874 for D4 to clear, through the pointer at
+# [0x801257C8]. id-3 clears it once it runs, and it only runs if DEFRAG yields. This is the back
+# edge of that loop.
+[[patches.hook]]
+func = "func_8007D850"
+before_vram = 0x8007D890
+text = """
+    // btx-patch: yield in the D4 wait.
+    yield_self_1ms_recomp(rdram, ctx);
+"""
+
+# Gameplay change, not a fix. func_800987D8 (the player fire routine) is the only place ammo is
+# decremented. It honours the LTSFBLLTS cheat (0x80135760) and the Unlimited Ammo option
+# (0x80134E69) only for weapon slots 0-3; slot 4 and up branch straight to the decrement. Take the
+# same "skip decrement" exit (L_800998FC, $v0 = slot << 1) for those slots.
+[[patches.hook]]
+func = "func_800987D8"
+before_vram = 0x800998A8
+text = """
+    // btx-patch: unlimited ammo. Apply the cheat and the option to slots 4 and up as well.
+    if (ctx->r2 == ctx->r0 && (MEM_BU(S32(0X8013 << 16), 0X5760) != 0 ||
+                               MEM_BU(S32(0X8013 << 16), 0X4E69) != 0)) {
+        ctx->r2 = S32(ctx->r3 << 1);
+        goto L_800998FC;
+    }
+"""

@@ -1,0 +1,26 @@
+# BattleTanx's F3DEX 1.21 graphics RSP ucode (standard Nintendo ucode, in-ROM)
+# text_offset = the ucode IMEM text in the ROM (RDRAM 0x8010E230 -> ROM 0x09E230, per the
+#   main-code mapping); version string "RSP Gfx ucode F3DEX 1.21" + dispatch table at ROM 0xD5550/0xD5590.
+# text_address = 0x04001080, text_size = 0xF80 (NOT 0x04001000/0x1000 as originally guessed).
+# Confirmed from an RSP PC trace across the boot-stub handoff: the shared boot stub (f3dex_boot.us.rev0.toml) DMAs
+# task->ucode into IMEM at destination 0x1080 for exactly 0xF80 bytes (its own
+# "addi $7,zero,0x1080" / "addi $3,zero,0xF7F" (len-1)), then jumps to 0x1080 unchanged
+# -- i.e. F3DEX's real entry ("j L_1738" as its first instruction) lives at 0x1080, and
+# only 0xF80 of the 0x1000 bytes originally extracted are real ucode text (the last 0x80
+# bytes, ROM 0x9F1B0-0x9F230, were never part of it).
+# extra_indirect_branch_targets = 0x1000 + dispatch-table offset (55 command handlers).
+text_offset = 0x09E230
+text_size = 0xF80
+text_address = 0x04001080
+rom_file_path = "BattleTanx (USA).z64"
+output_file_path = "rsp/f3dex.cpp"
+output_function_name = "f3dex"
+extra_indirect_branch_targets = [
+    0x1380, 0x11B0, 0x11D0, 0x11F0, 0x1210, 0x1230, 0x1250, 0x1270,
+    0x1290, 0x12B0, 0x12D0, 0x1138, 0x1470, 0x1480, 0x1490, 0x1460,
+    0x112C, 0x1070, 0x1160, 0x1390, 0x11F0, 0x14A0, 0x1110, 0x14A0,
+    0x14C8, 0x14F0, 0x1518, 0x1540, 0x1568, 0x1590, 0x15B8, 0x15E0,
+    0x1608, 0x1630, 0x1658, 0x1680, 0x16A8, 0x16D0, 0x16F8, 0x1720,
+    0x1748, 0x1770, 0x1798, 0x17C0, 0x17E8, 0x1810, 0x1838, 0x1860,
+    0x1888, 0x18B0, 0x18D8, 0x1900, 0x1928, 0x1950, 0x1978,
+]

@@ -1,0 +1,49 @@
+# The recompiled game code is generated from the ROM, which cannot be published, so CI cannot
+# link a playable executable. It builds everything else: the recompiler, the game patches, and
+# the renderer, runtime and frontend the port is built on.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  patches:
+    name: Build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang lld
+
+      - name: Build N64Recomp
+        run: |
+          cmake -S lib/N64ModernRuntime/N64Recomp -B n64recomp-build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build n64recomp-build --target N64RecompCLI -j "$(nproc)"
+
+      - name: Build the game patches
+        run: make -C patches CC=clang LD=ld.lld
+
+      - name: Recompile the game patches
+        run: ./n64recomp-build/N64Recomp patches.toml
+
+      - name: Install the build dependencies
+        run: sudo apt-get install -y libsdl2-dev libgtk-3-dev libfreetype-dev
+
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+          cmake --build build -j "$(nproc)" \
+            --target rt64 librecomp ultramodern recompui recompinput PatchesLib

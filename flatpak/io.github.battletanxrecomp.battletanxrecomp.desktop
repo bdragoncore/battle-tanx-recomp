@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BattleTanx: Recompiled
+Exec=/app/bin/BattleTanxRecompiled
+Type=Application
+Icon=io.github.battletanxrecomp.battletanxrecomp
+Categories=Game;
+Comment=Static recompilation of BattleTanx for PC.
+MimeType=x-scheme-handler/battletanxrecomp
