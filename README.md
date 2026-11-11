@@ -28,6 +28,47 @@ build has been tested so far.
   including level select, instead of entering codes on the Code Entry screen.
 - Mods and texture packs through the runtime's mod system.
 
+## Optional generic N64 USB pad profile (Windows)
+
+For the measured transparent-red, three-prong Chinese N64 USB pad, an
+[optional SDL profile](docs/controller-profiles/generic-n64-windows.txt) preserves
+its physical N64 labels. Check these raw SDL inputs, counting from zero, first:
+
+| Physical control | Raw input |
+| --- | --- |
+| A / B / Start | buttons 5 / 4 / 9 |
+| L / R / Z | buttons 6 / 7 / 8 |
+| C up / right / down / left | buttons 0 / 1 / 2 / 3 |
+| Stick X / Y | axes 0 / 1 |
+| D-pad | hat 0 |
+
+Close the game, back up `recompcontrollerdb.txt` beside
+`BattleTanxRecompiled.exe`, append the optional profile's three lines to that
+file, and restart. Keep the rest of the database. Use the default controller
+bindings in the launcher's Controls page; existing remaps still apply.
+
+This profile is specific to BattleTanx's defaults: physical B maps to SDL X,
+L to SDL right-stick click, and R to the right trigger. C buttons map to signed
+right-stick directions. Mapping L to SDL left shoulder instead would activate
+C Down (change tank / rail controls), rather than L (change viewpoint). Z maps
+to the left trigger. There is no measured Select button, so SDL Back is
+unassigned; use the keyboard/mouse to access settings and any menu actions
+without a matching physical button. Physical B still serves as N64 B.
+
+Only opt in for this layout. The measured unit reports VID/PID `0079:0006`,
+four axes, twelve declared buttons and one hat. Incompatible clones can share
+these IDs and CRCs; older SDL versions can also fall back across CRCs. Restore
+the database backup if any connected pad behaves differently.
+
+The three entries cover Windows identities previously observed on the same unit:
+SDL2 2.32.10 (`USB Joystick`, CRC `8630`), SDL2 2.26.3 (`USB Joystick`, `8e4f`)
+and SDL3 3.4.18 (`Microntek USB Joystick`, `79be`). No Linux/macOS identity is
+inferred. Raw measurements were supplied by MatyMeatBoy with permission to reuse
+with attribution: eighteen controls, 206 samples over 10.005 seconds. Native
+SDL2 virtual-device checks verify mapping translation; physical gameplay in
+BattleTanx and the Windows build itself have not been verified here. The SDL
+mapping does not configure a deadzone.
+
 ## Building
 
 See [BUILDING.md](BUILDING.md).
